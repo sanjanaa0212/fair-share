@@ -1,22 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { useAuthUser } from "@/hooks/use-auth-user";
-import { useQuery } from "@tanstack/react-query";
-import { getUserGroups } from "@/server/actions/groupActions";
-import { getUserExpenses, getUserBalances } from "@/server/actions/expenseActions";
-import { syncUser } from "@/server/actions/userActions";
-import { getFriendBalances } from "@/server/actions/friendActions";
-import { getUsersByIds } from "@/server/actions/userActions";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { TrendingUp, TrendingDown, Home, LayoutDashboard, User, Users } from "lucide-react";
-import { motion } from "framer-motion";
 import { CreateGroupDialog } from "@/components/dialogs/create-group-dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthUser } from "@/hooks/use-auth-user";
+import { getUserBalances, getUserExpenses } from "@/server/actions/expenseActions";
+import { getFriendBalances } from "@/server/actions/friendActions";
+import { getUserGroups } from "@/server/actions/groupActions";
+import { getUsersByIds, syncUser } from "@/server/actions/userActions";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { useEffect } from "react";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export default function DashboardPage() {
   const { user, loading } = useAuthUser();

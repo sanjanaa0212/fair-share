@@ -2,11 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuthUser } from "@/hooks/use-auth-user";
 import { motion } from "framer-motion";
 import { BarChart3, Receipt, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
+  const { user } = useAuthUser();
+  const router = useRouter();
+  if (user) {
+    router.push("/dashboard");
+  }
   return (
     <div className="min-h-screen ">
       <div className="mx-auto max-w-screen-lg px-4 py-12 sm:py-20">
@@ -25,10 +32,7 @@ export default function LandingPage() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="text-base">
-              <Link href="/login">Get started free</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="text-base bg-transparent">
-              <Link href="/dashboard">View demo</Link>
+              <Link href="/login">Get started</Link>
             </Button>
           </div>
         </motion.section>
