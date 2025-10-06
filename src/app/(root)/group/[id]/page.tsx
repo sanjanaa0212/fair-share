@@ -156,13 +156,7 @@ export default function GroupPage() {
     return acc;
   }, {});
   const pieData = Object.entries(categoryData).map(([name, value]) => ({ name, value }));
-  const COLORS = [
-    "hsl(var(--chart-1))",
-    "hsl(var(--chart-2))",
-    "hsl(var(--chart-3))",
-    "hsl(var(--chart-4))",
-    "hsl(var(--chart-5))",
-  ];
+  const COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 
   return (
     <div className="min-h-screen pb-20 sm:pb-6">
@@ -477,7 +471,7 @@ export default function GroupPage() {
                 <CardHeader>
                   <CardTitle>Spending by category</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex items-center justify-center">
                   {pieData.length > 0 ? (
                     <ChartContainer
                       config={Object.fromEntries(
