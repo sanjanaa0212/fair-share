@@ -45,13 +45,13 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!user) return;
 
-    getUser(user.uid).then((userData) => {
+    void getUser(user.uid).then((userData) => {
       if (userData) {
         form.reset({
-          name: userData.name || "",
-          phone: userData.phone || "",
-          email: userData.email || "",
-          avatar: userData.avatar || "",
+          name: userData.name ?? "",
+          phone: userData.phone ?? "",
+          email: userData.email ?? "",
+          avatar: userData.avatar ?? "",
         });
       }
       setDataLoading(false);

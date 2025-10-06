@@ -161,7 +161,7 @@ export function BillForm({ groupId, members = [], trigger }: Props) {
                     <FormLabel>Category</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>

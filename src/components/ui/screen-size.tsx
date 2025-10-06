@@ -1,4 +1,10 @@
+import { env } from "@/env";
+
 export const ScreenSize = () => {
+  if (env.NODE_ENV === "production") {
+    return null;
+  }
+
   return (
     <div className="fixed bottom-4 right-4 z-[1000] bg-card rounded-full flex h-12 w-12 items-center justify-center font-semibold border">
       <div className="block sm:hidden">sm</div>

@@ -8,8 +8,8 @@ export async function POST(req: NextRequest) {
     await sendEmail({
       to: email,
       subject: `Reminder to settle: ${billName}`,
-      text: `You have an outstanding amount of $${Number(amount).toFixed(2)} for "${billName}".`,
-      html: `<p>You have an outstanding amount of <strong>$${Number(amount).toFixed(
+      text: `You have an outstanding amount of ₹${Number(amount).toFixed(2)} for "${billName}".`,
+      html: `<p>You have an outstanding amount of <strong>₹${Number(amount).toFixed(
         2
       )}</strong> for "${billName}".</p><p>Please settle up when you can!</p>`,
     });

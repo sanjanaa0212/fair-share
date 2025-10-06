@@ -134,7 +134,7 @@ export default function FriendsPage() {
                         <div className="flex items-center gap-3">
                           {balance !== 0 && (
                             <Badge variant={balance > 0 ? "default" : "destructive"}>
-                              {balance > 0 ? `+$${balance.toFixed(2)}` : `-$${Math.abs(balance).toFixed(2)}`}
+                              {balance > 0 ? `₹${balance.toFixed(2)}` : `-₹${Math.abs(balance).toFixed(2)}`}
                             </Badge>
                           )}
                           <Button

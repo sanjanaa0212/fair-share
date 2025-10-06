@@ -29,7 +29,7 @@ export const ConfirmationDialog = ({
   open?: boolean;
   setOpen?: (text: boolean) => void;
   functionToBeExecuted: () => void;
-  description: string;
+  description: string | React.ReactNode;
   title: string;
   type: "failure" | "success" | "warning";
   loading?: boolean;
@@ -43,7 +43,7 @@ export const ConfirmationDialog = ({
           {children}
         </DialogTrigger>
 
-        <DialogContent className="rounded-2xl bg-white p-4 shadow-lg w-sm text-center">
+        <DialogContent className="rounded-2xl bg-white p-4 shadow-lg sm:w-sm text-center">
           <div className="flex justify-center">
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600">
               {type === "failure" ? <CircleX /> : type === "warning" ? <TriangleAlert /> : <CircleCheckBig />}
@@ -55,14 +55,14 @@ export const ConfirmationDialog = ({
           <DialogDescription className="p-1 -mt-2 text-sm text-gray-600">{description}</DialogDescription>
 
           {/* Footer Buttons */}
-          <DialogFooter className="flex w-full items-center justify-between mx-1">
+          <DialogFooter className="flex flex-col gap-3 sm:gap-0  sm:flex-row w-full items-center justify-between mx-1">
             <DialogClose asChild onClick={(e) => e.stopPropagation()}>
-              <Button variant="outline" className="w-1/2" onClick={(e) => e.stopPropagation()}>
+              <Button variant="outline" className="sm:w-1/2 w-full" onClick={(e) => e.stopPropagation()}>
                 Cancel
               </Button>
             </DialogClose>
             <LoadingButton
-              className="w-1/2"
+              className="sm:w-1/2 w-full"
               disabled={loading}
               loading={loading}
               variant={type === "failure" ? "destructive" : "default"}

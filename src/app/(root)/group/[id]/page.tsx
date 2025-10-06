@@ -163,11 +163,17 @@ export default function GroupPage() {
     return acc;
   }, {});
   const pieData = Object.entries(categoryData).map(([name, value]) => ({ name, value }));
-  const COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
+  const COLORS = [
+    "hsl(var(--chart-1))",
+    "hsl(var(--chart-2))",
+    "hsl(var(--chart-3))",
+    "hsl(var(--chart-4))",
+    "hsl(var(--chart-5))",
+  ];
 
   return (
     <div className="min-h-screen pb-20 sm:pb-6">
-      <div className="  px-4 py-6 space-y-6">
+      <div className="mx-auto max-w-5xl px-4 py-6 space-y-6">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -347,7 +353,7 @@ export default function GroupPage() {
                           className="flex items-center justify-between rounded-lg border p-4"
                         >
                           <div className="flex items-center gap-3">
-                            <Avatar className="size-8  sm:size-10">
+                            <Avatar className="size-6 sm:size-10">
                               <AvatarImage src={from?.avatar || "/placeholder.svg"} />
                               <AvatarFallback>{from?.name?.[0] || from?.email?.[0] || "?"}</AvatarFallback>
                             </Avatar>
@@ -360,15 +366,15 @@ export default function GroupPage() {
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="text-center">
-                              <p className="font-bold text-sm sm:text-base">${balance.amount.toFixed(2)}</p>
+                              <p className="font-bold  text-sm sm:text-base">${balance.amount.toFixed(2)}</p>
                               <p className="text-xs text-muted-foreground">to</p>
                             </div>
-                            <Avatar className="size-8  sm:size-10">
+                            <Avatar className="size-6 sm:size-10">
                               <AvatarImage src={to?.avatar || "/placeholder.svg"} />
                               <AvatarFallback>{to?.name?.[0] || to?.email?.[0] || "?"}</AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium text-sm sm:text-base line-clamp-1">{to?.name || "Unnamed"}</p>
+                              <p className="font-medium  text-sm sm:text-base line-clamp-1">{to?.name || "Unnamed"}</p>
                             </div>
                           </div>
                           {isUserInvolved && (
@@ -476,7 +482,7 @@ export default function GroupPage() {
                 <CardHeader>
                   <CardTitle>Spending by category</CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-center">
+                <CardContent>
                   {pieData.length > 0 ? (
                     <ChartContainer
                       config={Object.fromEntries(
@@ -610,7 +616,7 @@ export default function GroupPage() {
 function GroupSkeleton() {
   return (
     <div className="min-h-screen pb-20 sm:pb-6">
-      <div className="  px-4 py-6 space-y-6">
+      <div className="mx-auto max-w-5xl px-4 py-6 space-y-6">
         <div className="flex items-center justify-between">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-9 w-32" />
