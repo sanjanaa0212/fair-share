@@ -1,6 +1,8 @@
 "use server";
 
+import { auth } from "@/lib/firebase";
 import { getDb, type User } from "@/lib/mongodb";
+import { updateCurrentUser, updateProfile } from "firebase/auth";
 
 export async function syncUser(data: { uid: string; email: string; name?: string; avatar?: string }) {
   const db = await getDb();
@@ -54,8 +56,9 @@ export async function getUserByEmail(email: string) {
 
 export async function updateUserProfile(uid: string, data: { name?: string; phone?: string; avatar?: string }) {
   const db = await getDb();
-  await db
+  const res = await db
     .collection<User>("users")
     .updateOne({ firebaseUid: uid }, { $set: { ...data, photoURL: data.avatar, updatedAt: new Date() } });
+  // console.log({ res, res2 });
   return { success: true };
 }

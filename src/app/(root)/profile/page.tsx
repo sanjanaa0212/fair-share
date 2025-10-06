@@ -9,12 +9,13 @@ import { useAuthUser } from "@/hooks/use-auth-user";
 import { auth } from "@/lib/firebase";
 import { getUser, updateUserProfile } from "@/server/actions/userActions";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signOut } from "firebase/auth";
+import { signOut, updateProfile } from "firebase/auth";
 import { Home, LayoutDashboard, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -68,8 +69,11 @@ export default function ProfilePage() {
         phone: values.phone,
         avatar: values.avatar,
       });
+      await updateProfile(auth.currentUser!, { displayName: values.name });
+      toast.success("User update success !");
       router.refresh();
     } catch (error) {
+      toast.error("Failed to update user !");
       console.error("[v0] Error updating profile:", error);
     } finally {
       setLoading(false);
