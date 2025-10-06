@@ -109,7 +109,7 @@ export default function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm font-medium text-green-700 dark:text-green-400">You are owed</p>
-                  <p className="text-3xl font-bold text-green-900 dark:text-green-300 mt-2">${totalOwed.toFixed(2)}</p>
+                  <p className="text-3xl font-bold text-green-900 dark:text-green-300 mt-2">₹{totalOwed.toFixed(2)}</p>
                 </div>
                 <div className="rounded-full bg-green-200 dark:bg-green-900/50 p-3">
                   <TrendingUp className="size-5 text-green-700 dark:text-green-400" />
@@ -124,7 +124,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm font-medium text-orange-700 dark:text-orange-400">You owe</p>
                   <p className="text-3xl font-bold text-orange-900 dark:text-orange-300 mt-2">
-                    ${totalOwing.toFixed(2)}
+                    ₹{totalOwing.toFixed(2)}
                   </p>
                 </div>
                 <div className="rounded-full bg-orange-200 dark:bg-orange-900/50 p-3">
@@ -150,7 +150,7 @@ export default function DashboardPage() {
                       <div key={fb.friendId} className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">{friend.name || friend.email}</span>
                         <span className={fb.amount > 0 ? "text-green-600 font-medium" : "text-orange-600 font-medium"}>
-                          {fb.amount > 0 ? `+$${fb.amount.toFixed(2)}` : `-$${Math.abs(fb.amount).toFixed(2)}`}
+                          {fb.amount > 0 ? `+₹${fb.amount.toFixed(2)}` : `-₹${Math.abs(fb.amount).toFixed(2)}`}
                         </span>
                       </div>
                     );

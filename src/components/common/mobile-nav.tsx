@@ -24,7 +24,7 @@ export function MobileNav() {
           <Users className="size-5" />
           <span>Friends</span>
         </Link>
-        <Link href="/friends" className="py-4 flex flex-col items-center gap-1 text-muted-foreground">
+        <Link href="/profile" className="py-4 flex flex-col items-center gap-1 text-muted-foreground">
           <User className="size-5" />
           <span>Profile</span>
         </Link>

@@ -1,41 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useAuthUser } from "@/hooks/use-auth-user";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getGroup, removeGroupMember, deleteGroup } from "@/server/actions/groupActions";
-import { getGroupTransactions, getGroupBalances, createSettlement } from "@/server/actions/expenseActions";
-import { getUsersByIds } from "@/server/actions/userActions";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
-import {
-  Plus,
-  Receipt,
-  UsersIcon,
-  BarChart3,
-  Mail,
-  Settings,
-  LogOut,
-  Trash2,
-  History,
-  CheckCircle2,
-} from "lucide-react";
-import { motion } from "framer-motion";
+import { AddMemberDialog } from "@/components/dialogs/add-member-dialog";
 import { BillForm } from "@/components/forms/bill-form";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ResponsiveContainer, Pie, PieChart, Cell, Legend } from "recharts";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,9 +12,36 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuthUser } from "@/hooks/use-auth-user";
+import { createSettlement, getGroupBalances, getGroupTransactions } from "@/server/actions/expenseActions";
+import { deleteGroup, getGroup, removeGroupMember } from "@/server/actions/groupActions";
+import { getUsersByIds } from "@/server/actions/userActions";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import {
+  BarChart3,
+  CheckCircle2,
+  History,
+  LogOut,
+  Mail,
+  Plus,
+  Receipt,
+  Settings,
+  Trash2,
+  UsersIcon,
+} from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { AddMemberDialog } from "@/components/dialogs/add-member-dialog";
 
 export default function GroupPage() {
   const { id } = useParams<{ id: string }>();
@@ -146,7 +139,7 @@ export default function GroupPage() {
   };
 
   const isAdmin = user && group?.createdBy === user.uid;
-  const loading = groupLoading || transactionsLoading || balancesLoading || membersLoading;
+  const loading = groupLoading ?? transactionsLoading ?? balancesLoading ?? membersLoading;
 
   if (loading) {
     return <GroupSkeleton />;
@@ -158,8 +151,8 @@ export default function GroupPage() {
 
   const expenses = transactions.filter((t) => t.type === "expense");
   const categoryData = expenses.reduce<Record<string, number>>((acc, e: any) => {
-    const cat = e.category || "Other";
-    acc[cat] = (acc[cat] || 0) + e.amount;
+    const cat = e.category ?? "Other";
+    acc[cat] = (acc[cat] ?? 0) + e.amount;
     return acc;
   }, {});
   const pieData = Object.entries(categoryData).map(([name, value]) => ({ name, value }));
@@ -199,23 +192,23 @@ export default function GroupPage() {
                   <Settings className="size-4" />
                 </Button>
               </DialogTrigger>
-              <DialogContent>
-                <div onClick={handleInvite}>
+              <DialogContent className="flex flex-col gap-2">
+                <DialogTitle>Settings</DialogTitle>
+                <Button size="sm" variant="outline" onClick={handleInvite}>
                   <Mail className="mr-2 size-4" />
                   Invite member
-                </div>
-                <div />
+                </Button>
                 <AddMemberDialog groupId={group._id} groupName={group.name} />
                 {isAdmin ? (
-                  <div onClick={() => setShowDeleteDialog(true)} className="text-destructive">
+                  <Button size="sm" variant="outline" onClick={() => setShowDeleteDialog(true)}>
                     <Trash2 className="mr-2 size-4" />
                     Delete group
-                  </div>
+                  </Button>
                 ) : (
-                  <div onClick={() => setShowLeaveDialog(true)} className="text-destructive">
+                  <Button size="sm" variant="outline" onClick={() => setShowLeaveDialog(true)}>
                     <LogOut className="mr-2 size-4" />
                     Leave group
-                  </div>
+                  </Button>
                 )}
               </DialogContent>
             </Dialog>
@@ -268,13 +261,13 @@ export default function GroupPage() {
                               <div>
                                 <p className="font-medium">{transaction.title}</p>
                                 <p className="text-xs text-muted-foreground">
-                                  Paid by {payer?.name || payer?.email || "Unknown"} •{" "}
+                                  Paid by {payer?.name ?? payer?.email ?? "Unknown"} •{" "}
                                   {new Date(transaction.date).toLocaleDateString()}
                                 </p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="font-semibold">${transaction.amount.toFixed(2)}</p>
+                              <p className="font-semibold">₹{transaction.amount.toFixed(2)}</p>
                               {transaction.category && (
                                 <Badge variant="outline" className="text-xs mt-1">
                                   {transaction.category}
@@ -300,14 +293,14 @@ export default function GroupPage() {
                               <div>
                                 <p className="font-medium text-green-900 dark:text-green-300">Settlement</p>
                                 <p className="text-xs text-green-700 dark:text-green-400">
-                                  {from?.name || from?.email} paid {to?.name || to?.email} •{" "}
+                                  {from?.name ?? from?.email} paid {to?.name ?? to?.email} •{" "}
                                   {new Date(transaction.date).toLocaleDateString()}
                                 </p>
                               </div>
                             </div>
                             <div className="text-right">
                               <p className="font-semibold text-green-900 dark:text-green-300">
-                                ${transaction.amount.toFixed(2)}
+                                ₹{transaction.amount.toFixed(2)}
                               </p>
                               <Badge
                                 variant="outline"
@@ -343,7 +336,7 @@ export default function GroupPage() {
                     {balances.map((balance: any, i: number) => {
                       const from = members.find((m) => m.uid === balance.from);
                       const to = members.find((m) => m.uid === balance.to);
-                      const isUserInvolved = user && (balance.from === user.uid || balance.to === user.uid);
+                      const isUserInvolved = user && (balance.from === user.uid ?? balance.to === user.uid);
                       return (
                         <motion.div
                           key={i}
@@ -354,33 +347,35 @@ export default function GroupPage() {
                         >
                           <div className="flex items-center gap-3">
                             <Avatar className="size-6 sm:size-10">
-                              <AvatarImage src={from?.avatar || "/placeholder.svg"} />
-                              <AvatarFallback>{from?.name?.[0] || from?.email?.[0] || "?"}</AvatarFallback>
+                              <AvatarImage src={from?.avatar ?? "/placeholder.svg"} />
+                              <AvatarFallback>{from?.name?.[0] ?? from?.email?.[0] ?? "?"}</AvatarFallback>
                             </Avatar>
                             <div>
                               <p className="font-medium text-sm sm:text-base line-clamp-1">
-                                {from?.name || from?.email || "Unknown"}
+                                {from?.name ?? from?.email ?? "Unknown"}
                               </p>
                               <p className="text-xs text-muted-foreground">owes</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="text-center">
-                              <p className="font-bold  text-sm sm:text-base">${balance.amount.toFixed(2)}</p>
+                              <p className="font-bold  text-sm sm:text-base">₹{balance.amount.toFixed(2)}</p>
                               <p className="text-xs text-muted-foreground">to</p>
                             </div>
                             <Avatar className="size-6 sm:size-10">
-                              <AvatarImage src={to?.avatar || "/placeholder.svg"} />
-                              <AvatarFallback>{to?.name?.[0] || to?.email?.[0] || "?"}</AvatarFallback>
+                              <AvatarImage src={to?.avatar ?? "/placeholder.svg"} />
+                              <AvatarFallback>{to?.name?.[0] ?? to?.email?.[0] ?? "?"}</AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium  text-sm sm:text-base line-clamp-1">{to?.name || "Unnamed"}</p>
+                              <p className="font-medium  text-sm sm:text-base line-clamp-1">{to?.name ?? "Unnamed"}</p>
                             </div>
                           </div>
-                          {isUserInvolved && (
+                          {isUserInvolved ? (
                             <Button size="sm" variant="outline" onClick={() => handleSettleUp(balance)}>
                               <CheckCircle2 className="mr-1 size-4" /> Settle
                             </Button>
+                          ) : (
+                            <div className="w-24" />
                           )}
                         </motion.div>
                       );
@@ -408,11 +403,11 @@ export default function GroupPage() {
                   {members.map((member: any) => (
                     <div key={member.uid} className="flex items-center gap-3 rounded-lg border p-3">
                       <Avatar>
-                        <AvatarImage src={member.avatar || "/placeholder.svg"} />
-                        <AvatarFallback>{member.name?.[0] || member.email?.[0] || "?"}</AvatarFallback>
+                        <AvatarImage src={member.avatar ?? "/placeholder.svg"} />
+                        <AvatarFallback>{member.name?.[0] ?? member.email?.[0] ?? "?"}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <p className="font-medium">{member.name || "Unnamed"}</p>
+                        <p className="font-medium">{member.name ?? "Unnamed"}</p>
                         <p className="text-xs text-muted-foreground">{member.email}</p>
                       </div>
                       {member.uid === group.createdBy && <Badge variant="secondary">Admin</Badge>}
@@ -448,13 +443,13 @@ export default function GroupPage() {
                             <div>
                               <p className="font-medium">{expense.title}</p>
                               <p className="text-xs text-muted-foreground">
-                                Paid by {payer?.name || payer?.email || "Unknown"} •{" "}
+                                Paid by {payer?.name ?? payer?.email ?? "Unknown"} •{" "}
                                 {new Date(expense.date).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="font-semibold">${expense.amount.toFixed(2)}</p>
+                            <p className="font-semibold">₹{expense.amount.toFixed(2)}</p>
                             {expense.category && (
                               <Badge variant="outline" className="text-xs mt-1">
                                 {expense.category}
@@ -518,7 +513,7 @@ export default function GroupPage() {
                   <div className="space-y-4">
                     <div className="text-center py-6">
                       <p className="text-4xl font-bold">
-                        ${expenses.reduce((sum: number, e: any) => sum + e.amount, 0).toFixed(2)}
+                        ₹{expenses.reduce((sum: number, e: any) => sum + e.amount, 0).toFixed(2)}
                       </p>
                       <p className="text-sm text-muted-foreground mt-2">Total group spending</p>
                     </div>
@@ -580,10 +575,10 @@ export default function GroupPage() {
               {selectedBalance && (
                 <>
                   Confirm that{" "}
-                  {members.find((m) => m.uid === selectedBalance.from)?.name ||
+                  {members.find((m) => m.uid === selectedBalance.from)?.name ??
                     members.find((m) => m.uid === selectedBalance.from)?.email}{" "}
-                  paid ${selectedBalance.amount.toFixed(2)} to{" "}
-                  {members.find((m) => m.uid === selectedBalance.to)?.name ||
+                  paid ₹{selectedBalance.amount.toFixed(2)} to{" "}
+                  {members.find((m) => m.uid === selectedBalance.to)?.name ??
                     members.find((m) => m.uid === selectedBalance.to)?.email}
                   ?
                 </>

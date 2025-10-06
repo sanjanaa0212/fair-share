@@ -1,21 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import { useAuthUser } from "@/hooks/use-auth-user";
-import { getUser, updateUserProfile } from "@/server/actions/userActions";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { Button, LoadingButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import { Loader2, Home, LayoutDashboard, User } from "lucide-react";
-import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthUser } from "@/hooks/use-auth-user";
+import { auth } from "@/lib/firebase";
+import { getUser, updateUserProfile } from "@/server/actions/userActions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signOut } from "firebase/auth";
+import { Home, LayoutDashboard, User } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -136,10 +136,9 @@ export default function ProfilePage() {
                 />
 
                 <div className="flex gap-3 pt-2">
-                  <Button type="submit" className="flex-1" disabled={loading}>
-                    {loading && <Loader2 className="mr-2 size-4 animate-spin" />}
+                  <LoadingButton type="submit" loading={loading} className="flex-1" disabled={loading}>
                     Save changes
-                  </Button>
+                  </LoadingButton>
                   <Button type="button" onClick={handleLogout} variant="outline" className="flex-1 bg-transparent">
                     Log out
                   </Button>
